@@ -4,7 +4,7 @@ import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 function CreateTask({ addTaskHandler }) {
   const [enteredTask, setEnteredTask] = useState('');
 
-  const taskInputHandler = (enteredText) => {
+  const taskInputHandler = enteredText => {
     setEnteredTask(enteredText);
   };
 
@@ -31,5 +31,7 @@ function CreateTask({ addTaskHandler }) {
     </View>
   );
 }
+
+// Trial to see if bens branch working
 
 export default CreateTask;
