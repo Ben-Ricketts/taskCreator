@@ -45,55 +45,37 @@ function TaskManager() {
     setFilteredTask(completeTasks);
   };
 
+  // Get request
+
   useEffect(() => {
     const fetchItem = async () => {
-      if (!deviceId) {
-        console.log('No deviceId yet, skipping fetch');
-        return;
-      }
       try {
-        console.log('Fetching tasks with deviceId:', deviceId);
-        const headers = {
-          'X-Device-ID': deviceId,
-        };
-        console.log('Request headers:', headers);
-        const response = await axios.get(renderServer, {
-          headers: headers
-        });
+        const response = await axios.get(renderServer);
         const taskValues = response.data.tasks;
         setTask(taskValues);
       } catch (err) {
-        console.error('Error fetching tasks:', err.response?.data || err.message);
+        console.error(
+          'Error fetching tasks:',
+          err.response?.data || err.message
+        );
       }
     };
 
     fetchItem();
-  }, [deviceId, renderServer]);
+  }, []);
+
+  // Post request
 
   const addTaskHandler = async newTask => {
-    if (!deviceId) {
-      console.log('No deviceId available, cannot create task');
-      return;
-    }
     if (task.length === 0) return;
 
     try {
-      console.log('Creating new task with deviceId:', deviceId);
-      const headers = {
-        'X-Device-ID': deviceId,
-      };
-      console.log('Request headers:', headers);
-      const response = await axios.post(
-        renderServer,
-        {
-          task: newTask,
-          status: 'tasks',
-        },
-        {
-          headers: headers
-        }
-      );
-      const newTaskData = response.data.newPost;
+      const response = await axios.post(renderServer, {
+        task: newTask,
+        status: 'tasks',
+      });
+
+      const newTaskData = response.data.task;
       setTask(prevTasks => [...prevTasks, newTaskData]);
 
       // If we're currently viewing 'tasks', update filteredTasks too
