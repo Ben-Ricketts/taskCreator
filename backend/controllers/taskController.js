@@ -1,11 +1,8 @@
 const Task = require('../models/taskModel');
 
 exports.getTasks = async (req, res) => {
-  console.log('GET /api/tasks - Headers:', req.headers);
   try {
-    const deviceId = req.headers['x-device-id'];
-    console.log('Device ID from headers:', deviceId);
-    const findTasks = await Task.find({ deviceId: deviceId });
+    const findTasks = await Task.find();
 
     const sanitizedTasks = findTasks.map(task => ({
       id: task._id,
@@ -47,23 +44,17 @@ exports.getTask = async (req, res) => {
 };
 
 exports.postTasks = async (req, res) => {
-  console.log('POST /api/tasks - Headers:', req.headers);
-  console.log('POST /api/tasks - Body:', req.body);
   try {
-    const deviceId = req.headers['x-device-id'];
-    console.log('Device ID from headers:', deviceId);
     const taskData = {
       ...req.body,
-      deviceId: deviceId,
     };
-
     const task = await Task.create(taskData);
+
     const sanitizedTask = {
       id: task._id,
       task: task.task,
       status: task.status,
     };
-
     res.status(200).json({
       message: 'Task created successfully',
       task: sanitizedTask,
@@ -73,6 +64,7 @@ exports.postTasks = async (req, res) => {
     res.status(400).json({
       message: 'Failed to create task',
     });
+    console.log(err);
   }
 };
 

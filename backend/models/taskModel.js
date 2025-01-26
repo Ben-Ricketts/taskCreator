@@ -9,10 +9,6 @@ const taskSchema = new mongoose.Schema({
     type: String,
     default: 'tasks',
   },
-  deviceId: {
-    type: String,
-    required: [true, 'please enter a device id'],
-  },
 });
 
 const Task = mongoose.model('Task', taskSchema);

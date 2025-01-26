@@ -1,10 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const path = require('path');
 const app = require("./app");
 
 // Config dotenv
-dotenv.config({ path: "./backend/config.env" });
+dotenv.config({ path: path.join(__dirname, 'config.env') });
 
 const port = process.env.PORT || 3000;
 const DB = process.env.DATABASE.replace("<db_password>", process.env.DBPASS);
