@@ -8,6 +8,7 @@ exports.getTasks = async (req, res) => {
       _id: task._id.toString(),
       task: task.task,
       status: task.status,
+      deviceId: task.deviceId,
     }));
 
     res.status(200).json({
@@ -54,6 +55,7 @@ exports.postTasks = async (req, res) => {
       _id: task._id.toString(),
       task: task.task,
       status: task.status,
+      deviceId: task.deviceId,
     };
     res.status(200).json({
       message: 'Task created successfully',
