@@ -7,7 +7,7 @@ import axios from 'axios';
 import { getDeviceId } from '../utils/deviceId';
 
 function TaskManager() {
-  const renderServer = 'https://tasksapp-ntnb.onrender.com/api/tasks';
+  const renderServer = 'http://192.168.1.15:3000/api/tasks';
   const [message, setMessage] = useState('tasks');
   const [task, setTask] = useState([]);
   const [filteredTasks, setFilteredTask] = useState(task);
@@ -52,6 +52,7 @@ function TaskManager() {
       try {
         const response = await axios.get(renderServer);
         const taskValues = response.data.tasks;
+        console.log('Tasks from server:', taskValues);
         setTask(taskValues);
       } catch (err) {
         console.error(
