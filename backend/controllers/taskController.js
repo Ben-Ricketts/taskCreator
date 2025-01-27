@@ -5,7 +5,7 @@ exports.getTasks = async (req, res) => {
     const findTasks = await Task.find();
 
     const sanitizedTasks = findTasks.map(task => ({
-      id: task._id,
+      _id: task._id.toString(),
       task: task.task,
       status: task.status,
     }));
@@ -26,7 +26,7 @@ exports.getTask = async (req, res) => {
   try {
     const findTask = await Task.findById(req.params.id);
     const sanitizedTask = {
-      id: findTask._id,
+      _id: findTask._id.toString(),
       task: findTask.task,
       status: findTask.status,
     };
@@ -51,7 +51,7 @@ exports.postTasks = async (req, res) => {
     const task = await Task.create(taskData);
 
     const sanitizedTask = {
-      id: task._id,
+      _id: task._id.toString(),
       task: task.task,
       status: task.status,
     };
@@ -73,7 +73,7 @@ exports.deleteTask = async (req, res) => {
     const id = req.params.id;
     const deleteTask = await Task.findByIdAndDelete(id);
     const sanitizedTask = {
-      id: deleteTask._id,
+      _id: deleteTask._id.toString(),
       task: deleteTask.task,
       status: deleteTask.status,
     };
@@ -106,7 +106,7 @@ exports.updateTask = async (req, res) => {
     }
 
     const sanitizedTask = {
-      id: updatedTask._id,
+      _id: updatedTask._id.toString(),
       task: updatedTask.task,
       status: updatedTask.status,
     };
