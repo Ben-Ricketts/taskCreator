@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  Button,
+  Alert,
+} from 'react-native';
 import ToDoItems from './ToDoItems';
 import CreateTask from './CreateTask';
 import TaskButton from './TasksButton';
@@ -27,7 +34,12 @@ function TaskManager() {
     initDeviceId();
   }, []);
 
+  const deviceid = () => {
+    Alert.alert('Device ID', deviceId);
+  };
+
   const tasksHandler = () => {
+    console.log(deviceId);
     setMessage('tasks');
     const tasks = task.filter(t => t.status === 'tasks');
     setFilteredTask(tasks);
@@ -74,10 +86,15 @@ function TaskManager() {
       const response = await axios.post(renderServer, {
         task: newTask,
         status: 'tasks',
+        deviceId: deviceId,
       });
 
       const newTaskData = response.data.task;
       setTask(prevTasks => [...prevTasks, newTaskData]);
+      Alert.alert(
+        'Task created',
+        `Task: ${newTask}\nStatus: tasks\nDevice ID: ${deviceId}`
+      );
 
       // If we're currently viewing 'tasks', update filteredTasks too
       if (message === 'tasks') {
@@ -117,6 +134,9 @@ function TaskManager() {
           inProgressHandler={inProgressHandler}
           completeHandler={completeHandler}
         />
+        <View>
+          <Button title="Device ID" onPress={deviceid} />
+        </View>
       </View>
     </SafeAreaView>
   );
