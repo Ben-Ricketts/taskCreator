@@ -62,7 +62,9 @@ function TaskManager() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await axios.get(renderServer);
+        const response = await axios.get(
+          `${renderServer}?deviceId=${deviceId}`
+        );
         const taskValues = response.data.tasks;
         console.log('Tasks from server:', taskValues);
         setTask(taskValues);
@@ -74,8 +76,11 @@ function TaskManager() {
       }
     };
 
-    fetchItem();
-  }, []);
+    if (deviceId) {
+      // Only fetch tasks if we have a deviceId
+      fetchItem();
+    }
+  }, [deviceId]); // Add deviceId as a dependency
 
   // Post request
 
