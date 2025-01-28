@@ -38,22 +38,38 @@ function TaskManager() {
     Alert.alert('Device ID', deviceId);
   };
 
-  const tasksHandler = () => {
-    console.log(deviceId);
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${renderServer}?deviceId=${deviceId}`);
+      const taskValues = response.data.tasks;
+      return taskValues; // Return the fetched tasks
+    } catch (err) {
+      console.error('Error fetching tasks:', err.response?.data || err.message);
+      return [];
+    }
+  };
+
+  const tasksHandler = async () => {
     setMessage('tasks');
-    const tasks = task.filter(t => t.status === 'tasks');
+    const currentTasks = await fetchTasks(); // Get fresh data
+    const tasks = currentTasks.filter(t => t.status === 'tasks');
     setFilteredTask(tasks);
   };
 
-  const inProgressHandler = () => {
+  const inProgressHandler = async () => {
     setMessage('In Progress');
-    const inProgressTasks = task.filter(t => t.status === 'in progress');
+    const currentTasks = await fetchTasks(); // Get fresh data
+    const inProgressTasks = currentTasks.filter(
+      t => t.status === 'in progress'
+    );
+    console.log('In Progress Tasks:', inProgressTasks);
     setFilteredTask(inProgressTasks);
   };
 
-  const completeHandler = () => {
+  const completeHandler = async () => {
     setMessage('complete');
-    const completeTasks = task.filter(t => t.status === 'complete');
+    const currentTasks = await fetchTasks(); // Get fresh data
+    const completeTasks = currentTasks.filter(t => t.status === 'complete');
     setFilteredTask(completeTasks);
   };
 
@@ -124,6 +140,7 @@ function TaskManager() {
         >
           {message}
         </Text>
+        <CreateTask addTaskHandler={addTaskHandler} />
       </View>
 
       <ScrollView className="flex-1 px-4">
@@ -133,7 +150,6 @@ function TaskManager() {
       </ScrollView>
 
       <View className="px-4 py-6 space-y-4">
-        <CreateTask addTaskHandler={addTaskHandler} />
         <TaskButton
           tasksHandler={tasksHandler}
           inProgressHandler={inProgressHandler}

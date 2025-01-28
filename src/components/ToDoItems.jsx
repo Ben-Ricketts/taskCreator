@@ -32,7 +32,7 @@ function ToDoItems({ task, setTask }) {
       const updatedTasks = task.map(t =>
         t._id === taskId ? response.data : t
       );
-      setTask(updatedTasks);
+      console.log(updatedTasks);
     } catch (err) {
       console.log('Error updating task status:', err);
     }
