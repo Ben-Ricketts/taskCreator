@@ -41,13 +41,25 @@ function TaskManager() {
   const fetchTasks = async () => {
     try {
       const response = await axios.get(`${renderServer}?deviceId=${deviceId}`);
-      const taskValues = response.data.tasks;
-      return taskValues; // Return the fetched tasks
+      const taskValues = response.data.tasks.filter(
+        task => task.deviceId === deviceId
+      );
+      setTask(taskValues);
+      setFilteredTask(taskValues);
+      return taskValues;
     } catch (err) {
       console.error('Error fetching tasks:', err.response?.data || err.message);
+      setTask([]);
+      setFilteredTask([]);
       return [];
     }
   };
+
+  useEffect(() => {
+    if (deviceId) {
+      fetchTasks();
+    }
+  }, [deviceId]);
 
   const tasksHandler = async () => {
     setMessage('tasks');
@@ -73,36 +85,7 @@ function TaskManager() {
     setFilteredTask(completeTasks);
   };
 
-  // Get request
-
-  useEffect(() => {
-    const fetchItem = async () => {
-      try {
-        const response = await axios.get(
-          `${renderServer}?deviceId=${deviceId}`
-        );
-        const taskValues = response.data.tasks;
-        console.log('Tasks from server:', taskValues);
-        setTask(taskValues);
-      } catch (err) {
-        console.error(
-          'Error fetching tasks:',
-          err.response?.data || err.message
-        );
-      }
-    };
-
-    if (deviceId) {
-      // Only fetch tasks if we have a deviceId
-      fetchItem();
-    }
-  }, [deviceId]); // Add deviceId as a dependency
-
-  // Post request
-
   const addTaskHandler = async newTask => {
-    if (task.length === 0) return;
-
     try {
       const response = await axios.post(renderServer, {
         task: newTask,
