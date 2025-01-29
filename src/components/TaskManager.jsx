@@ -34,7 +34,7 @@ function TaskManager() {
     initDeviceId();
   }, []);
 
-  const deviceid = () => {
+  const showDeviceId = () => {
     Alert.alert('Device ID', deviceId);
   };
 
@@ -145,7 +145,7 @@ function TaskManager() {
 
       <ScrollView className="flex-1 px-4">
         <View className="space-y-4">
-          <ToDoItems task={filteredTasks} setTask={setTask} />
+          <ToDoItems task={filteredTasks} setTask={setTask} fetchTasks={task} />
         </View>
       </ScrollView>
 
@@ -156,7 +156,7 @@ function TaskManager() {
           completeHandler={completeHandler}
         />
         <View>
-          <Button title="Device ID" onPress={deviceid} />
+          <Button title="Device ID" onPress={showDeviceId} />
         </View>
       </View>
     </SafeAreaView>

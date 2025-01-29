@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-function ToDoItems({ task, setTask }) {
+function ToDoItems({ task, setTask, fetchTasks }) {
   const renderServer = 'http://192.168.1.15:3000/api/tasks';
 
   // Handlers
@@ -32,7 +32,7 @@ function ToDoItems({ task, setTask }) {
       const updatedTasks = task.map(t =>
         t._id === taskId ? response.data : t
       );
-      console.log(updatedTasks);
+      console.log(fetchTasks());
     } catch (err) {
       console.log('Error updating task status:', err);
     }
@@ -118,9 +118,9 @@ function ToDoItems({ task, setTask }) {
             {item.status === 'in progress' && (
               <TouchableOpacity
                 onPress={() => updateButtonHandler(item._id, item.status)}
-                className="bg-inProgress px-4 py-2 rounded-lg"
+                className="bg-green-500 px-4 py-2 rounded-lg"
               >
-                <Text className="text-white font-semibold">Update</Text>
+                <Text className="text-white font-semibold">Complete</Text>
               </TouchableOpacity>
             )}
 
