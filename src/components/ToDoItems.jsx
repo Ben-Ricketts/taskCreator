@@ -16,7 +16,7 @@ function ToDoItems({
   filteredTask,
   setFilteredTask,
 }) {
-  const renderServer = 'https://tasksapp-ntnb.onrender.com/';
+  const renderServer = 'https://tasksapp-ntnb.onrender.com/api/tasks';
 
   // Handlers
 

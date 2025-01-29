@@ -14,7 +14,7 @@ import axios from 'axios';
 import { getDeviceId } from '../utils/deviceId';
 
 function TaskManager() {
-  const renderServer = 'https://tasksapp-ntnb.onrender.com';
+  const renderServer = 'https://tasksapp-ntnb.onrender.com/api/tasks';
   const [message, setMessage] = useState('tasks');
   const [task, setTask] = useState([]);
   const [filteredTasks, setFilteredTask] = useState(task);
@@ -36,7 +36,9 @@ function TaskManager() {
 
   const fetchTasks = async () => {
     try {
+      console.log('Fetching tasks from:', renderServer);
       const response = await axios.get(`${renderServer}?deviceId=${deviceId}`);
+      console.log('Response:', response.data);
       const taskValues = response.data.tasks.filter(
         task => task.deviceId === deviceId
       );
@@ -47,7 +49,12 @@ function TaskManager() {
       setFilteredTask(filterTasksByStatus);
       return taskValues;
     } catch (err) {
-      console.error('Error fetching tasks:', err.response?.data || err.message);
+      console.error('Error fetching tasks:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+        url: `${renderServer}?deviceId=${deviceId}`
+      });
       setTask([]);
       setFilteredTask([]);
       return [];
