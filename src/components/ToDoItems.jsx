@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-function ToDoItems({ task, setTask }) {
+function ToDoItems({ task, setTask, fetchTasks, filteredTask, setFilteredTask }) {
   const renderServer = 'http://192.168.1.15:3000/api/tasks';
 
   // Handlers
@@ -24,30 +24,63 @@ function ToDoItems({ task, setTask }) {
     }
   };
 
+  const deleteButtonHandler = async taskId => {
+    try {
+      await axios.delete(`${renderServer}/${taskId}`);
+      
+      // Remove from main task list
+      const updatedTasks = task.filter(t => t._id !== taskId);
+      setTask(updatedTasks);
+
+      // Remove from filtered tasks
+      const newFilteredTasks = filteredTask.filter(t => t._id !== taskId);
+      setFilteredTask(newFilteredTasks);
+    } catch (err) {
+      console.log('Error deleting task:', err);
+    }
+  };
+
   const startButtonHandler = async taskId => {
     try {
       const response = await axios.patch(`${renderServer}/${taskId}`, {
         status: 'in progress',
       });
+      const updatedTask = response.data;
+      
+      // Update main task list
       const updatedTasks = task.map(t =>
-        t._id === taskId ? response.data : t
+        t._id === taskId ? updatedTask : t
       );
-      console.log(updatedTasks);
+      setTask(updatedTasks);
+
+      // Remove from filtered tasks since it's no longer in 'tasks' status
+      const newFilteredTasks = task.filter(t => 
+        t._id === taskId ? false : t.status === 'tasks'
+      );
+      setFilteredTask(newFilteredTasks);
     } catch (err) {
       console.log('Error updating task status:', err);
     }
   };
 
-  const updateButtonHandler = async (taskId, currentStatus) => {
-    const newStatus = currentStatus === 'in progress' ? 'complete' : 'tasks';
+  const updateButtonHandler = async (taskId, status) => {
     try {
       const response = await axios.patch(`${renderServer}/${taskId}`, {
-        status: newStatus,
+        status: 'complete',
       });
+      const updatedTask = response.data;
+      
+      // Update main task list
       const updatedTasks = task.map(t =>
-        t._id === taskId ? response.data : t
+        t._id === taskId ? updatedTask : t
       );
       setTask(updatedTasks);
+
+      // Remove from filtered tasks since it's now complete
+      const newFilteredTasks = task.filter(t => 
+        t._id === taskId ? false : (t.status === 'tasks' || t.status === 'in progress')
+      );
+      setFilteredTask(newFilteredTasks);
     } catch (err) {
       console.log('Error updating task status:', err);
     }
@@ -118,14 +151,14 @@ function ToDoItems({ task, setTask }) {
             {item.status === 'in progress' && (
               <TouchableOpacity
                 onPress={() => updateButtonHandler(item._id, item.status)}
-                className="bg-inProgress px-4 py-2 rounded-lg"
+                className="bg-green-500 px-4 py-2 rounded-lg"
               >
-                <Text className="text-white font-semibold">Update</Text>
+                <Text className="text-white font-semibold">Complete</Text>
               </TouchableOpacity>
             )}
 
             <TouchableOpacity
-              onPress={() => handleDelete(item._id)}
+              onPress={() => deleteButtonHandler(item._id)}
               className="bg-red-500 px-4 py-2 rounded-lg"
             >
               <Text className="text-white font-semibold">Delete</Text>
