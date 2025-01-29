@@ -98,10 +98,6 @@ function TaskManager() {
 
       const newTaskData = response.data.task;
       setTask(prevTasks => [...prevTasks, newTaskData]);
-      Alert.alert(
-        'Task created',
-        `Task: ${newTask}\nStatus: tasks\nDevice ID: ${deviceId}`
-      );
 
       // If we're currently viewing 'tasks', update filteredTasks too
       if (message === 'tasks') {
@@ -131,7 +127,13 @@ function TaskManager() {
 
       <ScrollView className="flex-1 px-4">
         <View className="space-y-4">
-          <ToDoItems task={filteredTasks} setTask={setTask} fetchTasks={task} />
+          <ToDoItems
+            task={filteredTasks}
+            setTask={setTask}
+            fetchTasks={fetchTasks}
+            filteredTask={filteredTasks}
+            setFilteredTask={setFilteredTask}
+          />
         </View>
       </ScrollView>
 
@@ -141,9 +143,6 @@ function TaskManager() {
           inProgressHandler={inProgressHandler}
           completeHandler={completeHandler}
         />
-        <View>
-          <Button title="Device ID" onPress={showDeviceId} />
-        </View>
       </View>
     </SafeAreaView>
   );
