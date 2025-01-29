@@ -9,8 +9,14 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-function ToDoItems({ task, setTask, fetchTasks, filteredTask, setFilteredTask }) {
-  const renderServer = 'http://192.168.1.15:3000/api/tasks';
+function ToDoItems({
+  task,
+  setTask,
+  fetchTasks,
+  filteredTask,
+  setFilteredTask,
+}) {
+  const renderServer = 'https://tasksapp-ntnb.onrender.com/';
 
   // Handlers
 
@@ -27,7 +33,7 @@ function ToDoItems({ task, setTask, fetchTasks, filteredTask, setFilteredTask })
   const deleteButtonHandler = async taskId => {
     try {
       await axios.delete(`${renderServer}/${taskId}`);
-      
+
       // Remove from main task list
       const updatedTasks = task.filter(t => t._id !== taskId);
       setTask(updatedTasks);
@@ -46,15 +52,13 @@ function ToDoItems({ task, setTask, fetchTasks, filteredTask, setFilteredTask })
         status: 'in progress',
       });
       const updatedTask = response.data;
-      
+
       // Update main task list
-      const updatedTasks = task.map(t =>
-        t._id === taskId ? updatedTask : t
-      );
+      const updatedTasks = task.map(t => (t._id === taskId ? updatedTask : t));
       setTask(updatedTasks);
 
       // Remove from filtered tasks since it's no longer in 'tasks' status
-      const newFilteredTasks = task.filter(t => 
+      const newFilteredTasks = task.filter(t =>
         t._id === taskId ? false : t.status === 'tasks'
       );
       setFilteredTask(newFilteredTasks);
@@ -69,16 +73,16 @@ function ToDoItems({ task, setTask, fetchTasks, filteredTask, setFilteredTask })
         status: 'complete',
       });
       const updatedTask = response.data;
-      
+
       // Update main task list
-      const updatedTasks = task.map(t =>
-        t._id === taskId ? updatedTask : t
-      );
+      const updatedTasks = task.map(t => (t._id === taskId ? updatedTask : t));
       setTask(updatedTasks);
 
       // Remove from filtered tasks since it's now complete
-      const newFilteredTasks = task.filter(t => 
-        t._id === taskId ? false : (t.status === 'tasks' || t.status === 'in progress')
+      const newFilteredTasks = task.filter(t =>
+        t._id === taskId
+          ? false
+          : t.status === 'tasks' || t.status === 'in progress'
       );
       setFilteredTask(newFilteredTasks);
     } catch (err) {
