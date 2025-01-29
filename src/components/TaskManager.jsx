@@ -44,8 +44,11 @@ function TaskManager() {
       const taskValues = response.data.tasks.filter(
         task => task.deviceId === deviceId
       );
+      const filterTasksByStatus = taskValues.filter(
+        task => task.status === 'tasks'
+      );
       setTask(taskValues);
-      setFilteredTask(taskValues);
+      setFilteredTask(filterTasksByStatus);
       return taskValues;
     } catch (err) {
       console.error('Error fetching tasks:', err.response?.data || err.message);
