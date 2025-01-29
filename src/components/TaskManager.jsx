@@ -14,7 +14,7 @@ import axios from 'axios';
 import { getDeviceId } from '../utils/deviceId';
 
 function TaskManager() {
-  const renderServer = 'https://tasksapp-ntnb.onrender.com/';
+  const renderServer = 'https://tasksapp-ntnb.onrender.com';
   const [message, setMessage] = useState('tasks');
   const [task, setTask] = useState([]);
   const [filteredTasks, setFilteredTask] = useState(task);
