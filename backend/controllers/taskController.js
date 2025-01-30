@@ -1,4 +1,4 @@
-const Task = require('../models/taskModel');
+// const Task = require('../models/taskModel');
 
 exports.getTasks = async (req, res) => {
   try {
@@ -45,29 +45,29 @@ exports.getTask = async (req, res) => {
 };
 
 exports.postTasks = async (req, res) => {
-  try {
-    const taskData = {
-      ...req.body,
-    };
-    const task = await Task.create(taskData);
-
-    const sanitizedTask = {
-      _id: task._id.toString(),
-      task: task.task,
-      status: task.status,
-      deviceId: task.deviceId,
-    };
-    res.status(200).json({
-      message: 'Task created successfully',
-      task: sanitizedTask,
-    });
-  } catch (err) {
-    console.error('Error in postTasks:', err.message);
-    res.status(400).json({
-      message: 'Failed to create task',
-    });
-    console.log(err);
-  }
+  res.json({ message: 'post working' });
+  // try {
+  //   const taskData = {
+  //     ...req.body,
+  //   };
+  //   const task = await Task.create(taskData);
+  //   const sanitizedTask = {
+  //     _id: task._id.toString(),
+  //     task: task.task,
+  //     status: task.status,
+  //     deviceId: task.deviceId,
+  //   };
+  //   res.status(200).json({
+  //     message: 'Task created successfully',
+  //     task: sanitizedTask,
+  //   });
+  // } catch (err) {
+  //   console.error('Error in postTasks:', err.message);
+  //   res.status(400).json({
+  //     message: 'Failed to create task',
+  //   });
+  //   console.log(err);
+  // }
 };
 
 exports.deleteTask = async (req, res) => {
